@@ -67,9 +67,46 @@ export default class Slide {
     this.onEnd = this.onEnd.bind(this);
   }
 
+  // slides config
+
+  slidePosition(slide) {
+    // pegando o total de width da img do slide, tirando a sobra das margins e dividindo por 2
+    const margin = (this.wrapper.offsetWidth - slide.offsetWidth) / 2;
+    // tirando esse resultado da margin menos quanto falta para left, numero tem que ser negativo, feito isso vamos deixar a imagem centralizada
+    return -(slide.offsetLeft - margin);
+  }
+
+  slidesConfig() {
+    // retornando um map pois é possivel personaliza-lo com um objeto
+    this.slideArray = [...this.slide.children].map((element) => {
+      const position = this.slidePosition(element);
+      return {
+        position,
+        element,
+      };
+    });
+  }
+
+  slidesIndexNav(index) {
+    const last = this.slideArray.length - 1;
+    this.index = {
+      prev: index ? index - 1 : undefined,
+      active: index,
+      next: index === last ? undefined : index + 1,
+    };
+  }
+
+  changeSlide(index) {
+    const activeSlide = this.slideArray[index];
+    this.moveSlide(activeSlide.position);
+    this.slidesIndexNav(index);
+    this.dist.finalPosition = activeSlide.position;
+  }
+
   init() {
     this.bindEvents();
     this.addSlideEvents();
+    this.slidesConfig();
     return this;
   }
 }
