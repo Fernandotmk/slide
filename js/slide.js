@@ -16,33 +16,49 @@ export default class Slide {
   }
 
   updatePosition(clienteX) {
-    // agora pega o eixo x definido abaixo
+    // agora pega o eixo x definido abaixo e atualiza o movement do objeto dist
     this.dist.movement = (this.dist.startX - clienteX) * 1.6;
     return this.dist.finalPosition - this.dist.movement;
   }
 
   onStart(event) {
-    event.preventDefault();
+    let movetype;
+    if (event.type === 'mousedown') {
+      event.preventDefault();
+      this.dist.startX = event.clientX;
+      movetype = 'mousemove';
+    } else {
+      this.dist.startX = event.changedTouches[0].clientX;
+      movetype = 'touchmove';
+    }
     // define o eixo x como sendo igual ao eixo x do evento ao clicar
-    this.dist.startX = event.clientX;
-    this.wrapper.addEventListener('mousemove', this.onMove);
+    this.wrapper.addEventListener(movetype, this.onMove);
   }
 
   onMove(event) {
+    const pointerPosition =
+      event.type === 'mousemove'
+        ? event.clienteX
+        : event.changedTouches[0].clienteX;
     const finalPosition = this.updatePosition(event.clientX);
     this.moveSlide(finalPosition);
   }
 
   onEnd(event) {
-    this.wrapper.removeEventListener('mousemove', this.onMove);
+    const movetype = event.type === 'mouseup' ? 'mousemove' : 'touchmove';
+    this.wrapper.removeEventListener(movetype, this.onMove);
     this.dist.finalPosition = this.dist.movePosition;
   }
 
   addSlideEvents() {
     // ativa função onStart com o clique fica segurado
     this.wrapper.addEventListener('mousedown', this.onStart);
+    // evento touch p celular
+    this.wrapper.addEventListener('touchstart', this.onStart);
     // ativa função onEnd quando solta o clique do mouse
     this.wrapper.addEventListener('mouseup', this.onEnd);
+    // evento touch p celular
+    this.wrapper.addEventListener('touchend', this.onEnd);
   }
 
   bindEvents() {
