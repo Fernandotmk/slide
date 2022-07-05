@@ -164,7 +164,7 @@ export class Slide {
   }
 }
 
-export class SlideNav extends Slide {
+export default class SlideNav extends Slide {
   constructor(slide, wrapper) {
     // como é uma classe extendida é necessário utilizar o super
     super(slide, wrapper);
