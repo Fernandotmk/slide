@@ -1,9 +1,6 @@
-import Slide from './slide.js';
+import { Slide, SlideNav } from './slide.js';
 import debounce from './debounce.js';
 
-
-const slide = new Slide('.slide', '.slide-wrapper');
+const slide = new SlideNav('.slide', '.slide-wrapper');
 slide.init();
-
-slide.changeSlide(3);
-slide.activePrevSlide();
+slide.addArrow('.prev', '.next');
